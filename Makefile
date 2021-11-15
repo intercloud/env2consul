@@ -14,10 +14,11 @@ make-import: # Install parent makefiles
 .DEFAULT_GOAL :=
 default: lint
 
-clean: go-clean # Clean generated and cached files
-lint:  go-lint  # Check Go code
-build: go-build # Build server
-run:   go-run   # Run server
-consul:         # Start consul server
+clean: go-clean       # Clean generated and cached files
+lint:  go-lint        # Check Go code
+build: go-build       # Build server
+run:   go-run         # Run server
+binaries: go-binaries # Generate binaries
+consul:               # Start consul server
 	$(title)
 	@docker-compose up

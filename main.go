@@ -33,7 +33,7 @@ func Process(filename string) error {
 		}
 		key := strings.TrimSpace(line[:index])
 		value := strings.TrimSpace(line[index+1:])
-		_, err = exec.Command("/opt/bin/consul", "kv", "put", key, value).CombinedOutput()
+		err = exec.Command("/opt/bin/consul", "kv", "put", key, value).Run()
 		if err != nil {
 			return fmt.Errorf("calling consul: %v", err)
 		}
