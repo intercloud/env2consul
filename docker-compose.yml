@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+
+  consul:
+    image: consul:latest
+    restart: unless-stopped
+    ports:
+    - '8500:8500'
+    networks:
+    - default
