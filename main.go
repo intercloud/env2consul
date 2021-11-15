@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -11,7 +12,7 @@ import (
 )
 
 // Process loads environment in given file and calls consul
-func Process(filename string) error {
+func Process(filename, prefix string) error {
 	file, err := os.Open(filepath.Clean(filename))
 	if err != nil {
 		return err
@@ -33,7 +34,11 @@ func Process(filename string) error {
 		}
 		key := strings.TrimSpace(line[:index])
 		value := strings.TrimSpace(line[index+1:])
-		err = exec.Command("/opt/bin/consul", "kv", "put", key, value).Run()
+		path := key
+		if prefix != "" {
+			path = prefix + "/" + key
+		}
+		err = exec.Command("/opt/bin/consul", "kv", "put", path, value).Run()
 		if err != nil {
 			return fmt.Errorf("calling consul: %v", err)
 		}
@@ -42,8 +47,10 @@ func Process(filename string) error {
 }
 
 func main() {
-	for _, filename := range os.Args[1:] {
-		if err := Process(filename); err != nil {
+	prefix := flag.String("prefix", "", "consul key prefix")
+	flag.Parse()
+	for _, filename := range flag.Args() {
+		if err := Process(filename, *prefix); err != nil {
 			fmt.Printf("Error calling consul: %v\n", err)
 			os.Exit(1)
 		}
