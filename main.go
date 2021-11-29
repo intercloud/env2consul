@@ -38,7 +38,7 @@ func Process(filename, prefix string) error {
 		if prefix != "" {
 			path = prefix + "/" + key
 		}
-		err = exec.Command("/opt/bin/consul", "kv", "put", path, value).Run()
+		err = exec.Command("consul", "kv", "put", path, value).Run()
 		if err != nil {
 			return fmt.Errorf("calling consul: %v", err)
 		}
